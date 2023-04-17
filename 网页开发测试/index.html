@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>地图</title>
+    <script src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=4kzoQ0dO1YyL4C8M4GSiGRdUG1m1qCnv"></script>
+    <script src="https://www.unpkg.com/coordtransform@2.1.2/index.js"></script>
+    <link rel="stylesheet" href="./box.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="box">
+        <div class="client">
+          <div id="wp">
+            <!-- <div id="mapcv" style="width: 100%; height: 100%"></div> -->
+            <canvas id="mapcv" style="width: 100%; height: 100%"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="client">
+          <div id="baidu"></div>
+        </div>
+      </div>
+    </div>
+    <div class="line"></div>
+    <script type="module" src="./baidu.js"></script>
+    <script type="module" src="./index.js"></script>
+  </body>
+</html>
