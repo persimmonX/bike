@@ -18,7 +18,6 @@ var origin = new Proxy(option, {
 });
 
 function refresh() {
-  console.log("执行");
   for (let fn of origin.watch) {
     fn(origin);
   }

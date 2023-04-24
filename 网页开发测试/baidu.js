@@ -24,7 +24,6 @@ fetch("../路书/lushu-3562507.json")
   .then(res => {
     var path = res.map(item => {
       const trans = coordtransform.bd09togcj02(...item);
-      console.log("🐤 - path - trans:", trans);
       return new BMapGL.Point(...item);
     });
     var polyline = new BMapGL.Polyline(path, {

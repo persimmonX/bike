@@ -53,6 +53,10 @@ function renderToView(lon, lat, zoom) {
   var xClipNum = Math.ceil((MapConfig.ViewHeight + Math.abs(offSetY)) / MapConfig.TitlePix);
   var yClipNum = Math.ceil((MapConfig.ViewWidth + Math.abs(offSetX)) / MapConfig.TitlePix);
 
+  if (xClipNum > 0) {
+    console.log("🐤 - renderToView - xClipNum:", xClipNum);
+    console.log(point, zoom)
+  }
   //右下角行列号
   var rightBottomTitleRow = leftTopTitleRow + xClipNum - 1;
   var rightBottomTitleCol = leftTopTitleCol + yClipNum - 1;
