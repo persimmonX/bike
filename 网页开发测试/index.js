@@ -28,8 +28,8 @@ origin.watch.push(origin => {
   renderToView(origin.lon, origin.lat, origin.zoom);
 });
 function renderToView(lon, lat, zoom) {
-  zoom -= 1;
-  const point = baiduToWgs84([lon, lat]);
+  // const point = baiduToWgs84([lon, lat]);
+  const point = [lon, lat];
   var centerGeoPoint = lonlatTomercator({ x: point[0], y: point[1] });
   const Resolution = getResolution(zoom);
   //当前窗口显示的范围
@@ -109,6 +109,7 @@ function renderToView(lon, lat, zoom) {
       TitleImg.img = beauty;
       TitleImg.x = Math.floor(offSetX + j * MapConfig.TitlePix);
       TitleImg.y = Math.floor(offSetY + i * MapConfig.TitlePix);
+      console.log(`图片:/${zoom}/${leftTopTitleRow + i}/${leftTopTitleCol + j},offsetX:${TitleImg.x},offsetY:${TitleImg.y}`)
       beauty.onload = function () {
         myctx.drawImage(TitleImg.img, TitleImg.x, TitleImg.y);
       };

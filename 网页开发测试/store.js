@@ -1,7 +1,7 @@
 var option = {
-  lon: 121.568961,
-  lat: 31.252111,
-  zoom: 12,
+  lon: 122,
+  lat: 30,
+  zoom: 10,
   watch: [],
 };
 

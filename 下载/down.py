@@ -3,8 +3,8 @@ import os
 import requests
 import re
 PI =3.14156926
-ViewWidth =500
-ViewHeight =500
+ViewWidth =128
+ViewHeight =128
 TitlePix =256
 xmin =  -20037508.3427892
 ymin = -20037508.3427892
@@ -41,14 +41,19 @@ def computeRowColumn( center,  zoom):
 
     centerGeoPoint = lonlatTomercator(center)
     Resolution = getResolution(zoom)
+    print("centerGeoPoint:%s"%Resolution)
     # 当前窗口显示的范围
     minX = centerGeoPoint.x - (Resolution * ViewWidth) / 2
+    print("minX:%s"%minX)
     maxX = centerGeoPoint.x + (Resolution * ViewWidth) / 2
     minY = centerGeoPoint.y - (Resolution * ViewHeight) / 2
     maxY = centerGeoPoint.y + (Resolution * ViewHeight) / 2
+    print("maxY:%s"%maxY)
     # 左上角开始的行列号
     leftTopTitleRow = math.floor(abs(maxY - ymax) / Resolution / TitlePix)
     leftTopTitleCol = math.floor(abs(minX - xmin) / Resolution / TitlePix)
+    print("leftTopTitleRow:%s"%leftTopTitleRow)
+    print("leftTopTitleCol:%s"%leftTopTitleCol)
 
     # 实际地理范围
     realMinX = xmin + leftTopTitleCol * TitlePix * Resolution
@@ -57,10 +62,12 @@ def computeRowColumn( center,  zoom):
     # 计算左上角偏移像素
     offSetX = (realMinX - minX) / Resolution
     offSetY = (maxY - realMaxY) / Resolution
+    print("offSetX:%d"%offSetX+" offsetY:%d"%offSetY)
 
     # 计算瓦片个数
     xClipNum = math.ceil((ViewHeight + abs(offSetY)) / TitlePix)
     yClipNum = math.ceil((ViewWidth + abs(offSetX)) / TitlePix)
+    print(yClipNum)
     # 右下角行列号
     rightBottomTitleRow = leftTopTitleRow + xClipNum - 1
     rightBottomTitleCol = leftTopTitleCol + yClipNum - 1
@@ -70,14 +77,18 @@ def computeRowColumn( center,  zoom):
     for x in range(xClipNum):
         for y in range(yClipNum):
             file_path = "/"+str(zoom)+"/"+str(x+leftTopTitleRow)+"/"+str(y+leftTopTitleCol)
-            download(file_path)
+            print(file_path)
+            # download(file_path)
 
 class Point:
     def __init__(self, x, y):
         self.x = x
         self.y = y
 def main():
-    center = Point(120,30)
+    center = Point(121,30)
+    # center = Point(122,30)
+    # center = Point(123,30)
+    # center = Point(124,30)
     zoom = 10
     computeRowColumn(center, zoom)
 main()
