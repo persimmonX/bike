@@ -2,21 +2,21 @@ import math
 import os
 import requests
 import re
-PI =3.14156926
 ViewWidth =500
 ViewHeight =500
 TitlePix =256
 xmin =  -20037508.3427892
 ymin = -20037508.3427892
 xmax = 20037508.3427892
-ymax =20037508.3427892
+ymax = 20037508.3427892
 
+#在WGS84参考椭球中，赤道长度为40075.016686 km，在zoom level为0的时候，假设瓦片大小为256*256像素，1个像素对应的实际地理空间尺寸为156543.03米，计算公式为
 def getResolution (level):
     return 156543.03 * pow(2, -level)
 
 def lonlatTomercator(lonlat):
     x = (lonlat.x * 20037508.34) / 180
-    y = math.log(math.tan(((90 + lonlat.y) * PI) / 360)) / (PI / 180)
+    y = math.log(math.tan(((90 + lonlat.y) * math.pi) / 360)) / (math.pi / 180)
     y = (y * 20037508.34) / 180
     lonlat.x = x
     lonlat.y = y
@@ -28,14 +28,16 @@ def download(file_path):
         }
     r = requests.get(picture_url, headers=headers)
     dir_path =  re.search(r'^(/\d+/\d+)/\d+$',file_path)
+    pre_dir = "./dist-map"
     if dir_path:
-        path = "." + dir_path.group(1)
+        path = pre_dir + dir_path.group(1)
         if(os.path.exists(path)):
-            file_path = "." + file_path + ".png"
-            with open(file_path, 'wb') as f:
-                f.write(r.content)
+            pass
         else:
             os.makedirs(path)
+        file_path = pre_dir + file_path + ".png"
+        with open(file_path, 'wb') as f:
+            f.write(r.content)
     
 def computeRowColumn( center,  zoom):
 
@@ -80,5 +82,3 @@ def main():
     center = Point(120,30)
     zoom = 10
     computeRowColumn(center, zoom)
-main()
-
