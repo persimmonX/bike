@@ -27,10 +27,24 @@ renderToView(origin.lon, origin.lat, origin.zoom);
 origin.watch.push(origin => {
   renderToView(origin.lon, origin.lat, origin.zoom);
 });
-function renderToView(lon, lat, zoom) {
-  const point = baiduToWgs84([lon, lat]);
+function refreshCoordInfo(lon, lat, zoom) {
   const lnglatEle = document.querySelector(".lnglat");
-  lnglatEle.innerHTML = point.map(item=>Number(item).toFixed(5)).join(",") + `\n zoom:${zoom}`
+  const gcj02Ele = document.querySelector(".coord .gcj02");
+  const bd09Ele = document.querySelector(".coord .bd09");
+  const wgs84Ele = document.querySelector(".coord .wgs84");
+
+  const gcj02 = coordtransform.bd09togcj02(lon, lat);
+  console.log("🐤 - refreshCoordInfo - gcj02:", gcj02);
+  const wgs84 = coordtransform.gcj02towgs84(...gcj02);
+
+  lnglatEle.innerHTML = "火星坐标系：" + gcj02.map(item => Number(item).toFixed(5)).join(",") + `\n zoom:${zoom}`;
+  gcj02Ele.innerHTML = "火星坐标系：" + gcj02.map(item => Number(item).toFixed(5)).join(",") + `\n zoom:${zoom}`;
+  bd09Ele.innerHTML = "百度坐标系：" + [lon, lat].map(item => Number(item).toFixed(5)).join(",") + `\n zoom:${zoom}`;
+  wgs84Ele.innerHTML = "wgs84坐标系：" + wgs84.map(item => Number(item).toFixed(5)).join(",") + `\n zoom:${zoom}`;
+}
+function renderToView(lon, lat, zoom) {
+  refreshCoordInfo(lon, lat, zoom);
+  const point = baiduToWgs84([lon, lat]);
   // const point = [lon, lat];
   var centerGeoPoint = lonlatTomercator({ x: point[0], y: point[1] });
   const Resolution = getResolution(zoom);
@@ -57,7 +71,7 @@ function renderToView(lon, lat, zoom) {
 
   if (xClipNum > 0) {
     console.log("🐤 - renderToView - xClipNum:", xClipNum);
-    console.log(point, zoom)
+    console.log(point, zoom);
   }
   //右下角行列号
   var rightBottomTitleRow = leftTopTitleRow + xClipNum - 1;
@@ -111,7 +125,7 @@ function renderToView(lon, lat, zoom) {
       TitleImg.img = beauty;
       TitleImg.x = Math.floor(offSetX + j * MapConfig.TitlePix);
       TitleImg.y = Math.floor(offSetY + i * MapConfig.TitlePix);
-      console.log(`图片:/${zoom}/${leftTopTitleRow + i}/${leftTopTitleCol + j},offsetX:${TitleImg.x},offsetY:${TitleImg.y}`)
+      console.log(`图片:/${zoom}/${leftTopTitleRow + i}/${leftTopTitleCol + j},offsetX:${TitleImg.x},offsetY:${TitleImg.y}`);
       beauty.onload = function () {
         myctx.drawImage(TitleImg.img, TitleImg.x, TitleImg.y);
       };
@@ -170,43 +184,7 @@ function getResolution(level) {
 }
 
 function baiduToWgs84(position) {
-  var bdLon = position[0];
-  var bdLat = position[1];
-  var PI = 3.14159265358979324;
-  var x_pi = (3.14159265358979324 * 3000.0) / 180.0;
-  var x = parseFloat(bdLon) - 0.0065;
-  var y = parseFloat(bdLat) - 0.006;
-  var z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * x_pi);
-  var theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * x_pi);
-  var gcjLon = z * Math.cos(theta);
-  var gcjLat = z * Math.sin(theta);
-  var a = 6378245.0;
-  var ee = 0.00669342162296594323;
-  var dLat = transformLat(gcjLon - 105.0, gcjLat - 35.0);
-  var dLon = transformLon(gcjLon - 105.0, gcjLat - 35.0);
-  var radLat = (gcjLat / 180.0) * PI;
-  var magic = Math.sin(radLat);
-  magic = 1 - ee * magic * magic;
-  var sqrtMagic = Math.sqrt(magic);
-  dLat = (dLat * 180.0) / (((a * (1 - ee)) / (magic * sqrtMagic)) * PI);
-  dLon = (dLon * 180.0) / ((a / sqrtMagic) * Math.cos(radLat) * PI);
-  dLat = gcjLat - dLat;
-  dLon = gcjLon - dLon;
-  return [dLon, dLat];
-}
-function transformLon(x, y) {
-  var PI = 3.14159265358979324;
-  var ret = 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1 * Math.sqrt(Math.abs(x));
-  ret += ((20.0 * Math.sin(6.0 * x * PI) + 20.0 * Math.sin(2.0 * x * PI)) * 2.0) / 3.0;
-  ret += ((20.0 * Math.sin(x * PI) + 40.0 * Math.sin((x / 3.0) * PI)) * 2.0) / 3.0;
-  ret += ((150.0 * Math.sin((x / 12.0) * PI) + 300.0 * Math.sin((x / 30.0) * PI)) * 2.0) / 3.0;
-  return ret;
-}
-function transformLat(x, y) {
-  var PI = 3.14159265358979324;
-  var ret = -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * x * y + 0.2 * Math.sqrt(Math.abs(x));
-  ret += ((20.0 * Math.sin(6.0 * x * PI) + 20.0 * Math.sin(2.0 * x * PI)) * 2.0) / 3.0;
-  ret += ((20.0 * Math.sin(y * PI) + 40.0 * Math.sin((y / 3.0) * PI)) * 2.0) / 3.0;
-  ret += ((160.0 * Math.sin((y / 12.0) * PI) + 320 * Math.sin((y * PI) / 30.0)) * 2.0) / 3.0;
-  return ret;
+  let gcj02 = coordtransform.bd09togcj02(...position);
+  // return coordtransform.gcj02towgs84(...gcj02)
+  return gcj02;
 }

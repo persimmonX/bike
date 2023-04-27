@@ -1,3 +1,6 @@
 {
-    "python.terminal.executeInFileDir": true
+    "python.terminal.executeInFileDir": true,
+    "files.associations": {
+        "functional": "cpp"
+    }
 }

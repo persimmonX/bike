@@ -46,6 +46,15 @@ body {
   left: 0;
   right: 0;
 }
+.coord {
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: max-content;
+}
 .container {
   width: 100%;
   height: 100%;

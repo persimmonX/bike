@@ -47,7 +47,11 @@ void setup()
   myGLCD.drawCentreString("Hello", TFT_W / 2, TFT_H / 2, 2);
 
   Serial.println("计算经纬度对应行列....");
-  computePath c = computeRowColumn(121.49077882430818, 31.24092648236027, 15);
+  double* arr = new double[2];
+  wgs84togcj02(121.48711,31.24429,arr);
+  // Serial.print("****");
+  // Serial.print(arr[0]);
+  computePath c = computeRowColumn(arr[0],arr[1], 15);
   for (int x = 0; x < MAXROW; x++)
   {
     for (int y = 0; y < MAXCLOUMN; y++)
@@ -92,7 +96,7 @@ void show(string path, int offsetX, int offsetY)
       rc = png.decode(NULL, 0);
       png.close();
       int r = 5;
-      myGLCD.drawCircle((TFT_W - r) / 2, (TFT_H - r) / 2, r, TFT_RED);
+      myGLCD.drawCircle(TFT_W / 2 , TFT_H / 2, r, TFT_RED);
     }
   }
 }

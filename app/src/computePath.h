@@ -18,6 +18,9 @@ public:
     double x;
     double y;
 };
-
+bool out_of_china(double lng, double lat);
+double transformlat(double lng, double lat);
+double transformlng(double lng, double lat);
+void wgs84togcj02(double lng, double lat,double *arr);
 Point lonlatTomercator(Point lonlat);
 computePath computeRowColumn(double lng, double lat, int zoom);
