@@ -108,7 +108,7 @@ def compute(polygon,zoom):
         download(path)
         down_num += 1
         last = count-down_num if count-down_num >0 else 0
-        print("已下载：%d张,剩余：%d张,"%(down_num,last))
+        print("已下载：%d张,剩余：%d张,进度：%d%"%(down_num,last,math.floor(down_num/count*100)))
 def getPolygon(path):
     with open(path) as f:
         line = f.read()
@@ -127,7 +127,7 @@ def getPolygon(path):
 if __name__ =="__main__":
     print("开始计算")
     polygon = getPolygon("./sh.txt")
-    compute(polygon,6)
+    compute(polygon,15)
     # 测试
     # p =  lonlatTomercator(Point(120,30))
     # print(p.__dict__)

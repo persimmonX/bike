@@ -30,7 +30,6 @@ void pngClose(void *handle);
 int32_t pngRead(PNGFILE *page, uint8_t *buffer, int32_t length);
 int32_t pngSeek(PNGFILE *page, int32_t position);
 
-
 void setup()
 {
   Serial.begin(115200);
@@ -44,11 +43,11 @@ void setup()
     Serial.println("开启储存卡失败!!!");
   }
   Serial.println("显示开机界面....");
-  myGLCD.setRotation(3);
+  myGLCD.setRotation(1);
   myGLCD.drawCentreString("Hello", TFT_W / 2, TFT_H / 2, 2);
 
   Serial.println("计算经纬度对应行列....");
-  computePath c = computeRowColumn(122.0, 30.0, 10);
+  computePath c = computeRowColumn(121.49077882430818, 31.24092648236027, 15);
   for (int x = 0; x < MAXROW; x++)
   {
     for (int y = 0; y < MAXCLOUMN; y++)
@@ -70,7 +69,7 @@ void show(string path, int offsetX, int offsetY)
   Serial.print(offsetX);
   Serial.print(" offsetY：");
   Serial.print(offsetY);
-  string strname = path + ".png";
+  string strname = "/dist-map" + path + ".png";
   xpos = offsetX;
   ypos = offsetY;
   Serial.println("初始化储存卡....");
@@ -92,14 +91,14 @@ void show(string path, int offsetX, int offsetY)
     {
       rc = png.decode(NULL, 0);
       png.close();
+      int r = 5;
+      myGLCD.drawCircle((TFT_W - r) / 2, (TFT_H - r) / 2, r, TFT_RED);
     }
   }
 }
 void loop()
 {
 }
-
-
 
 void pngDraw(PNGDRAW *pDraw)
 {

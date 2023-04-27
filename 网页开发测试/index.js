@@ -28,8 +28,10 @@ origin.watch.push(origin => {
   renderToView(origin.lon, origin.lat, origin.zoom);
 });
 function renderToView(lon, lat, zoom) {
-  // const point = baiduToWgs84([lon, lat]);
-  const point = [lon, lat];
+  const point = baiduToWgs84([lon, lat]);
+  const lnglatEle = document.querySelector(".lnglat");
+  lnglatEle.innerHTML = point.map(item=>Number(item).toFixed(5)).join(",") + `\n zoom:${zoom}`
+  // const point = [lon, lat];
   var centerGeoPoint = lonlatTomercator({ x: point[0], y: point[1] });
   const Resolution = getResolution(zoom);
   //当前窗口显示的范围

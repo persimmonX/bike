@@ -8,10 +8,16 @@ map.addEventListener("zoomend", function (e) {
 map.addEventListener("moveend", function (e) {
   getMapStatus();
 });
+map.addEventListener("click", function (e) {
+  console.log("🐤 - e:", e.latlng);
+});
+var zoomCtrl = new BMapGL.ZoomControl();  // 添加缩放控件
+map.addControl(zoomCtrl);
 
 function getMapStatus() {
   var cen = map.getCenter(); // 获取地图中心点
   var zoom = map.getZoom();
+  console.log("🐤 - getMapStatus - zoom:", zoom);
   origin.zoom = Math.floor(zoom);
   origin.lon = cen.lng;
   origin.lat = cen.lat;

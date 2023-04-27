@@ -9,8 +9,8 @@ body {
 .client {
   width: 128px;
   height: 128px;
-  border: 20px solid black;
-  border-radius: 0px;
+  border: 2px solid black;
+  border-radius: 10px;
   position: absolute;
   left: 0;
   right: 0;
@@ -19,6 +19,32 @@ body {
   margin: auto;
   background-color: #5e5d60;
   overflow: hidden;
+}
+.client::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: red;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+.client:has(#baidu) {
+  width: 512px;
+  height: 512px;
+}
+.lnglat{
+  font-size: 12px;
+  text-align: center;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
 }
 .container {
   width: 100%;
@@ -49,4 +75,5 @@ body {
   z-index: 10;
   left: 0;
   background: green;
+  display: none;
 }
