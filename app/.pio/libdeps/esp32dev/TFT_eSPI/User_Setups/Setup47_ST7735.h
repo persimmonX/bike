@@ -23,10 +23,10 @@
 //#define TFT_INVERSION_OFF
 
 // Generic ESP32 setup
-// #define TFT_MISO 12
-#define TFT_MOSI 13
-#define TFT_SCLK 14
-#define TFT_CS    15 // Not defined here, chip select is managed by sketch
+#define TFT_MISO 19
+#define TFT_MOSI 23
+#define TFT_SCLK 18
+//#define TFT_CS    21 // Not defined here, chip select is managed by sketch
 #define TFT_DC    2
 #define TFT_RST   4  // Connect reset to ensure display initialises
 

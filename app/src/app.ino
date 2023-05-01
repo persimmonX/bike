@@ -13,17 +13,13 @@
 #define TFT_H 128
 #define MAX_IMAGE_WIDTH 256 // Adjust for your images
 
-#define TFT_MOSI 13
-#define TFT_SCLK 14
-#define TFT_CS 15
-#define TFT_DC 2
 #define GpsSerial Serial2
 int16_t xpos = 0;
 int16_t ypos = 0;
 PNG png;
 
 TFT_eSPI myGLCD = TFT_eSPI(TFT_W, TFT_H);
-
+TFT_CS = 1;
 // 函数头
 File pngfile;
 void pngDraw(PNGDRAW *pDraw);
@@ -33,7 +29,6 @@ int32_t pngRead(PNGFILE *page, uint8_t *buffer, int32_t length);
 int32_t pngSeek(PNGFILE *page, int32_t position);
 
 // gps配置
-int L = 13; // LED指示灯引脚
 const unsigned int gpsRxBufferLength = 600;
 char gpsRxBuffer[gpsRxBufferLength];
 unsigned int ii = 0;
@@ -57,12 +52,11 @@ void setup()
   GpsSerial.begin(9600);
   Serial.println("初始化屏幕....");
   myGLCD.init();
-  myGLCD.fillScreen(TFT_WHITE);
+  myGLCD.fillScreen(TFT_BLUE);
   Serial.println("显示开机界面....");
-  myGLCD.setRotation(1);
-  myGLCD.drawCentreString("Hello", TFT_W / 2, TFT_H / 2, 2);
+  myGLCD.setRotation(0);
+  myGLCD.drawCentreString("Hello world!", TFT_W / 2, TFT_H / 2, 2);
   Serial.println("初始化储存卡....");
-  SPIClass spi = SPIClass(VSPI);
   if (!SD.begin(5))
   {
     Serial.println("开启储存卡失败!!!");
@@ -79,15 +73,15 @@ void centerMap(double lng, double lat)
   double *arr = new double[2];
   wgs84togcj02(lng, lat, arr);
   computePath c = computeRowColumn(arr[0], arr[1], 15);
-  for (int x = 0; x < MAXROW; x++)
+  for (int i = 0; i < MAXROW; i++)
   {
-    for (int y = 0; y < MAXCLOUMN; y++)
+    for (int j = 0; j < MAXCLOUMN; j++)
     {
-      string str = c.paths[x][y];
+      string str = c.paths[i][j];
       if (!str.empty())
       {
         Serial.println("开始");
-        show(str, c.offsetX + y * TitlePix, c.offsetY + x * TitlePix);
+        show(str, c.offsetX + j * TitlePix , c.offsetY + i * TitlePix);
       }
     }
   }
@@ -104,7 +98,7 @@ void show(string path, int offsetX, int offsetY)
   string strname = "/dist-map" + path + ".png";
   xpos = offsetX;
   ypos = offsetY;
-  
+
   int16_t rc = png.open(strname.c_str(), pngOpen, pngClose, pngRead, pngSeek, pngDraw);
   if (rc == PNG_SUCCESS)
   {
@@ -132,6 +126,7 @@ void loop()
   gpsRead();        // 获取GPS数据
   parseGpsBuffer(); // 解析GPS数据
   printGpsBuffer(); // 输出解析后的数据
+  
 }
 
 void pngDraw(PNGDRAW *pDraw)
@@ -143,7 +138,7 @@ void pngDraw(PNGDRAW *pDraw)
   myGLCD.pushImage(xpos, ypos + pDraw->y, pDraw->iWidth, 1, lineBuffer);
 }
 
-void * pngOpen(const char *filename, int32_t *size)
+void *pngOpen(const char *filename, int32_t *size)
 {
   pngfile = SD.open(filename, "r");
   *size = pngfile.size();
